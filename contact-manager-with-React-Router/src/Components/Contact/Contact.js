@@ -5,7 +5,7 @@ import contactStyle from './Contact.module.css'
 
 const Contact = (props) => {
     // console.log(props.contact);
-    const {picture, first_name, last_name, gender, email, id} = props.contact;
+    const { first_name, last_name, email, id} = props.contact;
     return (
         <div className={`card card-body d-flex flex-column mb-3 border-success align-items-center ${contactStyle.contactBody}`} style={{width: "350px"}}>
             {/* <img className='card-img-top' src={picture} style={{width: "70%"}} alt="profilePicture"/> */}

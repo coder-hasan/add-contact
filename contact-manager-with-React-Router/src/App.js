@@ -20,7 +20,7 @@ function App() {
   const [contacts, setContacts] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:4000/contacts')
-      .then(data => setContacts(data.data))
+      .then(({data}) => setContacts(data))
       
   }, []);
   // console.log(contacts)
