@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddContacts = () => {
+    const [addContact, setAddContact] = useState({
+        "id": 1,
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "gender": "",
+        "dob": new Date(),
+        "picture": ""
+    })
     return (
         <>
             <div className='container'>
@@ -19,6 +30,9 @@ const AddContacts = () => {
                             <div className="form-group">
                                 <label htmlFor="email">Email address</label>
                                 <input type="email" name='email' className="form-control" placeholder="Enter email" />
+                            </div>
+                            <div className="form-group">
+                                <DatePicker></DatePicker>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="url">Picture URL</label>
