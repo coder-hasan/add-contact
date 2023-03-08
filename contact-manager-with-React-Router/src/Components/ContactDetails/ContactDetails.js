@@ -26,7 +26,7 @@ const ContactDetails = (props) => {
                             <h5 className='card-title'>Name: {first_name} {last_name}</h5>
                             <p className='card-text mb-0'>Gender: {gender}</p>
                             <p className='card-text mb-0'>Email: {email}</p>
-                            <p className='card-text'>Birth Date: {dob}</p>
+                            <p className='card-text'>Birth Date: {new Date(dob).getUTCFullYear()}</p>
                             <button onClick={() => navigate(-1)} className='btn btn-dark' style={{widt: "85%"}}>Go Back</button>
                             {/* <Link to={`"/contact/"${id}`}>
                                 <button className='btn btn-success'>View</button>
