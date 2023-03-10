@@ -13,7 +13,7 @@ const Contact = (props) => {
                 <h5 className='card-title'>Name: {first_name} {last_name}</h5>
                 {/* <p className='card-text mb-0'>Gender: {gender}</p> */}
                 <p className='card-text'>Email: {email}</p>
-                <Link to={"/contact/"+id}>
+                <Link to={"/contacts/"+id}>
                     <button className='btn btn-success'>View</button>
                 </Link>
                 {/* <Link to={`"/contact/"${id}`}>

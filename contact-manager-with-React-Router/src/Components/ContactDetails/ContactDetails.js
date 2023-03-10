@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import contactStyle from '../Contact/Contact.module.css'
 
@@ -15,7 +16,15 @@ const ContactDetails = (props) => {
         axios.get(`http://localhost:4000/contacts/${contactId}`)
             .then(({data}) => setContact(data));
     },[contactId]);
-    const {picture, first_name, last_name, gender, email, dob} = contact;
+    const history = useNavigate();
+    const handleDelete = () =>{
+        axios.delete(`http://localhost:4000/contacts/${contactId}`)
+            .then(data => {
+                // console.log(data)
+                history('/contacts');
+            }).catch(err => console.log(err))
+    }
+    const {picture, first_name, last_name, gender, email, dob, id} = contact;
     return (
         <div className='container'>
             <div className='row'>
@@ -26,8 +35,12 @@ const ContactDetails = (props) => {
                             <h5 className='card-title'>Name: {first_name} {last_name}</h5>
                             <p className='card-text mb-0'>Gender: {gender}</p>
                             <p className='card-text mb-0'>Email: {email}</p>
-                            <p className='card-text'>Birth Date: {new Date(dob).getUTCFullYear()}</p>
-                            <button onClick={() => navigate(-1)} className='btn btn-dark' style={{widt: "85%"}}>Go Back</button>
+                            <p className='card-text'>Birth Date: {dayjs(dob).format('DD/MM/YYYY')}</p>
+                            <div className='d-flex justify-content-between'>
+                                <button onClick={() => navigate(-1)} className='btn btn-dark' style={{widt: "85%"}}>Go Back</button>
+                                <button onClick={() => navigate(`/contacts/edit-contact/${id}`)} className='btn btn-warning'>Edit</button>
+                                <button onClick={handleDelete} className='btn btn-danger'>Delete</button>
+                            </div>
                             {/* <Link to={`"/contact/"${id}`}>
                                 <button className='btn btn-success'>View</button>
                             </Link> */}

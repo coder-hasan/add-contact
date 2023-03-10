@@ -15,6 +15,8 @@ import About from './Components/About/About';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import AddContacts from './pages/AddContacts';
+import EditContact from './Components/EditContact/EditContact';
+import NotFound from './Components/NotFound/NotFound';
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -35,8 +37,9 @@ function App() {
           <Route path='/about' element={<About></About>}></Route>
           <Route path='/contacts' element={<Contacts contacts={contacts}></Contacts>}></Route>
           <Route path='/add-contacts' element={<AddContacts></AddContacts>}></Route>
-          <Route path='/contact/:contactId' element={<ContactDetails contacts={contacts}></ContactDetails>}></Route>
-          {/* <Route path='*' element={<PageNotFound></PageNotFound>}></Route> */}
+          <Route path='/contacts/:contactId' element={<ContactDetails contacts={contacts}></ContactDetails>}></Route>
+          <Route path='/contacts/edit-contact/:contactId' element={<EditContact contacts={contacts}></EditContact>}></Route>
+          <Route path='*' element={<NotFound></NotFound>}></Route>
         </Routes>
       </Router>
     </div>

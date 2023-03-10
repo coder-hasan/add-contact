@@ -1,97 +1,79 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from 'react-router-dom';
+// import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+// import DatePicker from 'react-datepicker';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const AddContacts = () => {
-    const [addContact, setAddContact] = useState({
-        // "id": 1,
+const EditContact = () => {
+    const {contactId} = useParams();
+    const [editContact, setEditContact] = useState({
         "first_name": "",
         "last_name": "",
         "email": "",
         "gender": "",
-        "dob": new Date(),
         "picture": "",
         "success": false,
         "error": ""
     });
+    useEffect(() => {
+        axios.get(`http://localhost:4000/contacts/${contactId}`)
+            .then(({data}) => setEditContact(data));
+    },[contactId]);
+    const handleChange = (event) => {
+        const newContactInfo = {...editContact};
+        newContactInfo[event.target.name] = event.target.value
+        setEditContact(newContactInfo);
+    };
     const handleBlurChange =(event) => {
         let isFieldValid = true;
         if(event.target.name === 'email'){
-        isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
-        // console.log(isFieldValid, event.target.value);
+            isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
         }
         if(isFieldValid){
-            const newContactInfo = {...addContact};
+            const newContactInfo = {...editContact};
             newContactInfo[event.target.name] = event.target.value
-            setAddContact(newContactInfo);
+            setEditContact(newContactInfo);
         }
     }
     const handleEmailChange = (event) => {
-        // let isFieldValid = true;
-        // if(event.target.name === 'email'){
-        // isFieldValid = /\S+@\S+\.\S+/.test(event.target.value);
-        // console.log(isFieldValid, event.target.value);
-        // }
-        // if(isFieldValid){
-        //     const newContactInfo = {...addContact};
-        //     newContactInfo[event.target.name] = event.target.value
-        //     setAddContact(newContactInfo);
-        // }
         handleBlurChange(event);
-    }
-    const handleChange = (event) => {
-        const newContactInfo = {...addContact};
-        newContactInfo[event.target.name] = event.target.value
-        setAddContact(newContactInfo);
-    };
-    const handleDateChange = (date) =>{
-        const newContactInfo = {...addContact};
-        newContactInfo[dob] = date;
-        setAddContact(newContactInfo);
-        // setAddContact({
-        //     dob: date
-        // });
     }
     const history = useNavigate();
     const handleFormSubmit = (e) => {
-        const {first_name, last_name, gender, dob, picture} = addContact;
+        const {first_name, last_name, gender, picture} = editContact;
         e.preventDefault();
-        if(first_name === '' || last_name === '' || gender === '' || dob === '' || picture === ''){
-            setAddContact({
+        if(first_name === '' || last_name === '' || gender === '' || picture === ''){
+            setEditContact({
                 error: "Please Fill All Inforrmation with Valid Info"
             })
         }else{
-            console.log(addContact);
-            addContact.success = true;
-            axios.post("http://localhost:4000/contacts", {
+            console.log(editContact);
+            editContact.success = true;
+            axios.put(`http://localhost:4000/contacts/${contactId}`, {
                 first_name, 
                 last_name,
                 email, 
                 gender, 
-                dob, 
                 picture
             }).then(data => {
-                // console.log(data)
+                console.log(data)
                 history('/contacts');
             }).catch(err => console.log(err))
         }
         
     }
-    const {first_name, last_name, email, gender, dob, picture, error} = addContact;
-    // console.log(addContact);
+    const {picture, first_name, last_name, gender, email} = editContact;
     return (
         <>        
             <div className='container'>
                 <div className='row'>
                     <div className='col-md-6 offset-3'>
-                        <h2 className='text-center mb-3'>Add Contact</h2>
+                        <h2 className='text-center mb-3'>Edit This Contact</h2>
                         {
-                            addContact.success && <div className='alert alert-success'>{first_name} {last_name} Successfully</div>
+                            editContact.success && <div className='alert alert-success'>{first_name} {last_name} Successfully</div>
                         }
                         {
-                            error && <div className='alert alert-danger'>{error}</div>
+                            editContact.error && <div className='alert alert-danger'>{editContact.error}</div>
                         }
                         <form onSubmit={handleFormSubmit}>
                             <div className="form-group">
@@ -106,15 +88,14 @@ const AddContacts = () => {
                                 <label htmlFor="email">Email address</label>
                                 <input onBlur={handleBlurChange} onChange={handleEmailChange} defaultValue={email} required type="email" name='email' className="form-control" placeholder="Enter your email" />
                             </div>
-                            <div className="form-group">
-                                <DatePicker onChange={handleDateChange} selected={dob} className="form-control" defaultValue={dob}></DatePicker>
-                            </div>
+                            {/* <div className="form-group">
+                                <DatePicker selected={dob} className="form-control" defaultValue={dob}></DatePicker>
+                            </div> */}
                             <div className="form-group">
                                 <label htmlFor="picture">Picture URL</label>
                                 <input onChange={handleChange} value={picture} required type="url" name='picture' className="form-control" placeholder="Your Photo URL" />
                             </div>
                             <select onChange={handleChange} value={gender} required name='gender' className="form-select form-group" aria-label="Default select example">
-                                {/* <option selected>Open this select menu</option> */}
                                 <option value="" disabled>Select Gender</option>
                                 <option value="Male" >Male</option>
                                 <option value="Female">Female</option>
@@ -128,4 +109,4 @@ const AddContacts = () => {
     );
 };
 
-export default AddContacts;
+export default EditContact;
